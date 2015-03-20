@@ -10,6 +10,7 @@
 #include "game.h"
 #include "textureManager.h"
 #include "image.h"
+#include "mario.h"
 
 //=============================================================================
 // This class is the core of the game
@@ -20,10 +21,10 @@ private:
     // game items
     TextureManager nebulaTexture;   // nebula texture
     TextureManager planetTexture;   // planet texture
-    TextureManager shipTexture;     // ship texture
-    Image   planet;                 // planet image
+    TextureManager marioTexture;     // ship texture
+    //Image   planet;                 // planet image
     Image   nebula;                 // nebula image
-    Image   ship;                   // ship image
+    Mario   mario;                   // ship image
 
 
 public:

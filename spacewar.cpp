@@ -1,11 +1,13 @@
 // Programming 2D Games
 // Copyright (c) 2011 by: 
 // Charles Kelly
-// Move spaceship with arrow keys.
+// Move spacemario with arrow keys.
 // Chapter 5 spacewar.cpp v1.0
 // This class is the core of the game
 
 #include "spaceWar.h"
+
+using namespace marioNS;
 
 //=============================================================================
 // Constructor
@@ -34,12 +36,12 @@ void Spacewar::initialize(HWND hwnd)
         throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing nebula texture"));
 
     // planet texture
-    if (!planetTexture.initialize(graphics,PLANET_IMAGE))
-        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing planet texture"));
+    //if (!planetTexture.initialize(graphics,PLANET_IMAGE))
+    //    throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing planet texture"));
 
-    // spaceship texture
-    if (!shipTexture.initialize(graphics,SHIP_IMAGE))
-        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ship texture"));
+    // spacemario texture
+    if (!marioTexture.initialize(graphics,MARIO_IMAGE))
+        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing mario texture"));
 
     // nebula
     if (!nebula.initialize(graphics,0,0,0,&nebulaTexture))
@@ -48,22 +50,22 @@ void Spacewar::initialize(HWND hwnd)
 	nebula.setScale(GAME_HEIGHT * 1.0/nebula.getHeight());
 
     // planet
-    if (!planet.initialize(graphics,0,0,0,&planetTexture))
-        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing planet"));
-    // place planet in center of screen
-    planet.setX(GAME_WIDTH*0.5f  - planet.getWidth()*0.5f);
-    planet.setY(GAME_HEIGHT*0.5f - planet.getHeight()*0.5f);
+    //if (!planet.initialize(graphics,0,0,0,&planetTexture))
+    //    throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing planet"));
+    //// place planet in center of screen
+    //planet.setX(GAME_WIDTH*0.5f  - planet.getWidth()*0.5f);
+    //planet.setY(GAME_HEIGHT*0.5f - planet.getHeight()*0.5f);
 
-    // ship
-	//if (!ship.initialize(graphics, 0, 0, 0, &shipTexture))
-	if (!ship.initialize(graphics,SHIP_WIDTH, SHIP_HEIGHT, SHIP_COLS, &shipTexture))
-        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ship"));
-    ship.setX(GAME_WIDTH/4);                    // start above and left of planet
-    ship.setY(GAME_HEIGHT/4);
-	ship.setScale(0.5f);
-    ship.setFrames(SHIP_START_FRAME, SHIP_END_FRAME);   // animation frames
-    ship.setCurrentFrame(SHIP_START_FRAME);     // starting frame
-    ship.setFrameDelay(SHIP_ANIMATION_DELAY);
+    // mario
+	//if (!mario.initialize(graphics, 0, 0, 0, &marioTexture))
+	if (!mario.initialize(this,MARIO_WIDTH, MARIO_HEIGHT, MARIO_COLS, &marioTexture))
+        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing mario"));
+ //   mario.setX(GAME_WIDTH/4);                    // start above and left of planet
+ //   mario.setY(GAME_HEIGHT/4);
+	mario.setScale(0.5f);
+ //   mario.setFrames(MARIO_START_FRAME, MARIO_END_FRAME);   // animation frames
+ //   mario.setCurrentFrame(MARIO_START_FRAME);     // starting frame
+ //   mario.setFrameDelay(MARIO_ANIMATION_DELAY);
 
     return;
 }
@@ -73,32 +75,28 @@ void Spacewar::initialize(HWND hwnd)
 //=============================================================================
 void Spacewar::update()
 {
-    if(input->isKeyDown(SHIP_RIGHT_KEY))            // if move right
-    {
-        ship.setX(ship.getX() + frameTime * SHIP_SPEED);
-        if (ship.getX() > GAME_WIDTH)               // if off screen right
-            ship.setX((float)-ship.getWidth());     // position off screen left
-    }
-    if(input->isKeyDown(SHIP_LEFT_KEY))             // if move left
-    {
-        ship.setX(ship.getX() - frameTime * SHIP_SPEED);
-        if (ship.getX() < -ship.getWidth())         // if off screen left
-            ship.setX((float)GAME_WIDTH);           // position off screen right
-    }
-    if(input->isKeyDown(SHIP_UP_KEY))               // if move up
-    {
-        ship.setY(ship.getY() - frameTime * SHIP_SPEED);
-        if (ship.getY() < -ship.getHeight())        // if off screen top
-            ship.setY((float)GAME_HEIGHT);          // position off screen bottom
-    }
-    if(input->isKeyDown(SHIP_DOWN_KEY))             // if move down
-    {
-        ship.setY(ship.getY() + frameTime * SHIP_SPEED);
-        if (ship.getY() > GAME_HEIGHT)              // if off screen bottom
-            ship.setY((float)-ship.getHeight());    // position off screen top
-    }
+	if (input->isKeyDown(MARIO_RIGHT_KEY))            // if move right
+	{
+		mario.moveRight(frameTime);
+	}
+	if (input->isKeyDown(MARIO_LEFT_KEY))             // if move left
+	{
+		mario.moveLeft(frameTime);
+	}
+	//if (input->isKeyDown(mario_UP_KEY))               // if move up
+	//{
+	//	mario.setY(mario.getY() - frameTime * mario_SPEED);
+	//	if (mario.getY() < -mario.getHeight())        // if off screen top
+	//		mario.setY((float)GAME_HEIGHT);          // position off screen bottom
+	//}
+	//if (input->isKeyDown(mario_DOWN_KEY))             // if move down
+	//{
+	//	mario.setY(mario.getY() + frameTime * mario_SPEED);
+	//	if (mario.getY() > GAME_HEIGHT)              // if off screen bottom
+	//		mario.setY((float)-mario.getHeight());    // position off screen top
+	//}
+	mario.update(frameTime);
 
-    ship.update(frameTime);
 }
 
 //=============================================================================
@@ -121,8 +119,8 @@ void Spacewar::render()
     graphics->spriteBegin();                // begin drawing sprites
 
     nebula.draw();                          // add the orion nebula to the scene
-    planet.draw();                          // add the planet to the scene
-    ship.draw();                            // add the spaceship to the scene
+    //planet.draw();                          // add the planet to the scene
+    mario.draw();                            // add the spacemario to the scene
 
     graphics->spriteEnd();                  // end drawing sprites
 }
@@ -133,7 +131,7 @@ void Spacewar::render()
 //=============================================================================
 void Spacewar::releaseAll()
 {
-    shipTexture.onLostDevice();
+    marioTexture.onLostDevice();
     planetTexture.onLostDevice();
     nebulaTexture.onLostDevice();
 
@@ -149,7 +147,7 @@ void Spacewar::resetAll()
 {
     nebulaTexture.onResetDevice();
     planetTexture.onResetDevice();
-    shipTexture.onResetDevice();
+    marioTexture.onResetDevice();
 
     Game::resetAll();
     return;
